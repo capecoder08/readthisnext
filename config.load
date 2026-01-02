@@ -1,0 +1,6 @@
+LOAD CSV
+    FROM '/Users/alyssatrapp/Downloads/Goodreads-Books.csv' (skip header = 1)
+    INTO postgresql://postgres.hviclhceipnikvijbuvr:epSsoOPNfw1jCZo7@aws-0-us-west-2.pooler.supabase.com:5432/postgres
+        TARGET TABLE books;
+
+
