@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Camera, Save, Plus, X, User } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Camera, Save, Plus, X, User, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { mockTasteProfile } from "@/lib/mock-data";
 import { GoodreadsImport } from "@/components/features/goodreads-import";
+import { useAuth } from "@/lib/hooks/use-auth";
 
 const AVAILABLE_GENRES = [
   "Mystery",
@@ -41,6 +42,7 @@ const AVAILABLE_TROPES = [
 ];
 
 export default function ProfilePage() {
+  const { user, loading: authLoading } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState("Reader");
@@ -52,6 +54,15 @@ export default function ProfilePage() {
   const [tropes, setTropes] = useState(mockTasteProfile.tropes);
   const [showGenreSelector, setShowGenreSelector] = useState(false);
   const [showTropeSelector, setShowTropeSelector] = useState(false);
+
+  // Show loading state while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+      </div>
+    );
+  }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

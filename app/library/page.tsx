@@ -1,23 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { BookOpen, Plus, Upload, X } from "lucide-react";
+import { BookOpen, Plus, Upload, X, Loader2 } from "lucide-react";
 import { BookCard } from "@/components/features/book-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { mockBooks } from "@/lib/mock-data";
 import { GoodreadsImport } from "@/components/features/goodreads-import";
 import { AddBookForm } from "@/components/features/add-book-form";
+import { useAuth } from "@/lib/hooks/use-auth";
 
 type Tab = "all" | "reading" | "want_to_read" | "read";
 
 export default function LibraryPage() {
+  const { loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>("all");
   const [showImport, setShowImport] = useState(false);
   const [showAddBook, setShowAddBook] = useState(false);
 
   // For demo, we'll use mock books and filter them
   const userBooks = mockBooks.slice(0, 5);
+
+  // Show loading state while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+      </div>
+    );
+  }
 
   const tabs: { id: Tab; label: string; count: number }[] = [
     { id: "all", label: "All Books", count: userBooks.length },
